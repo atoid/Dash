@@ -227,6 +227,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (mEcuData.mMessage != null) {
+                    Toast.makeText(getApplicationContext(), mEcuData.mMessage, Toast.LENGTH_SHORT).show();
+                    mEcuData.mMessage = null;
+                }
+
                 TextView tv;
                 tv = findViewById(R.id.rpm);
                 tv.setText(mEcuData.mRpm);

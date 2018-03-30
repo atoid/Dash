@@ -19,6 +19,7 @@ public class EcuData {
     public String mBatteryVoltage;
     public String mGear;
     public String mEngine;
+    public String mMessage;
 
     private String msgBuf = "";
 
@@ -55,8 +56,7 @@ public class EcuData {
 
         int table = getByteValue(3);
 
-        if (table == TABLE_11)
-        {
+        if (table == TABLE_11) {
             mRpm = "" + getShortValue(4+0);
             mCoolantTemp = "" + (getByteValue(4+5) - 40);
             mAirTemp = "" + (getByteValue(4+7) - 40);
@@ -64,8 +64,7 @@ public class EcuData {
             mSpeed = "" + getByteValue(4+13);
         }
 
-        if (table == TABLE_D1)
-        {
+        if (table == TABLE_D1) {
             int v = getByteValue(4+0) & 0x3;
             mGear = "" + v;
             mEngine = "" + getByteValue(4+4);
@@ -82,15 +81,20 @@ public class EcuData {
         byte t = data[0];
 
         // Start of new message
-        if (t == ':')
-        {
+        if (t == ':') {
             res = parseMessage();
             msgBuf = new String(data, 1, data.length-1);
         }
 
-        if ((t >= '0' && t <= '9') || (t >= 'A' && t <= 'F'))
-        {
+        // More data to message
+        if ((t >= '0' && t <= '9') || (t >= 'A' && t <= 'F')) {
             msgBuf += new String(data);
+        }
+
+        // Lower level message that user should see
+        if (t == '#') {
+            mMessage = "ECU: " + new String(data, 1, data.length-1);
+            res = true;
         }
 
         return res;
