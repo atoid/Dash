@@ -21,6 +21,9 @@ public class EcuData {
     public String mEngine;
     public String mMessage;
 
+    private int mNeutral = 0;
+    private int mRpmBin = 0;
+    private int mSpeedBin = 0;
     private String msgBuf = "";
 
     public EcuData() {
@@ -43,6 +46,25 @@ public class EcuData {
         return Integer.parseInt(msgBuf.substring(at*2, at*2+2), 16);
     }
 
+    private void calculateGear() {
+        int v = mNeutral & 0x0f;
+
+        if (v == 0x03) {
+            mGear = "S";    // Kickstand
+        }
+        else if (v == 0x01) {
+            mGear = "N";    // Neutral or clutch
+        }
+        else {
+            // Calculate gear from speed / rpm ratio
+            if (mRpmBin > 0) {
+                float ratio = (float) mSpeedBin / (float) mRpmBin;
+                // TODO: find out the ratios...
+                mGear = String.format("%.3f", ratio);
+            }
+        }
+    }
+
     private boolean parseMessage() {
         if (msgBuf.isEmpty())
             return false;
@@ -57,17 +79,19 @@ public class EcuData {
         int table = getByteValue(3);
 
         if (table == TABLE_11) {
-            mRpm = "" + getShortValue(4+0);
+            mRpmBin = getShortValue(4+0);
+            mRpm = "" + mRpmBin;
             mCoolantTemp = "" + (getByteValue(4+5) - 40);
             mAirTemp = "" + (getByteValue(4+7) - 40);
             mBatteryVoltage = "" + ((float) getByteValue(4+12) / 10.f);
-            mSpeed = "" + getByteValue(4+13);
+            mSpeedBin = getByteValue(4+13);
+            mSpeed = "" + mSpeedBin;
         }
 
         if (table == TABLE_D1) {
-            int v = getByteValue(4+0) & 0x3;
-            mGear = "" + v;
+            mNeutral = getByteValue(4+0);
             mEngine = "" + getByteValue(4+4);
+            calculateGear();
         }
 
         return true;

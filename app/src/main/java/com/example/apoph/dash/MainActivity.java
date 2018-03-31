@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 tv = findViewById(R.id.gear);
                 tv.setText(mEcuData.mGear);
-                if (mEcuData.mGear == "N")
+                if (mEcuData.mGear == "N" || mEcuData.mGear == "S")
                     tv.setBackgroundColor(0xff00cc00);
                 else
                     tv.setBackgroundColor(0x0000cc00);
