@@ -50,7 +50,7 @@ public class EcuData {
         int v = mNeutral & 0x0f;
 
         if (v == 0x03) {
-            mGear = "S";    // Kickstand
+            mGear = "P";    // Kickstand (like Park)
         }
         else if (v == 0x01) {
             mGear = "N";    // Neutral or clutch

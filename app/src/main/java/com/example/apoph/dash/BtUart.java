@@ -88,8 +88,7 @@ public class BtUart {
             String bdaddr = dev.getAddress();
             String name = dev.getName();
 
-            if (!mBleDevices.containsKey(bdaddr))
-            {
+            if (!mBleDevices.containsKey(bdaddr)) {
                 Log.i(TAG, "New device: " + bdaddr + " (" + name + ")");
                 mBleDevices.put(bdaddr, name);
             }
@@ -153,8 +152,7 @@ public class BtUart {
     }
 
     public boolean connect() {
-        if (mCurrentDev != null)
-        {
+        if (mCurrentDev != null) {
             return connect(mCurrentDev);
         }
 

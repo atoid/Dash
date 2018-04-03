@@ -93,8 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
 
-        if (mBtUart != null)
-        {
+        if (mBtUart != null) {
             mBtUart.close();
         }
 
@@ -111,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Location lastl = locationResult.getLastLocation();
 
-                if (mMap != null && lastl != null)
-                {
+                if (mMap != null && lastl != null) {
                     LatLng nl = new LatLng(lastl.getLatitude(), lastl.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(nl));
                     mGpsSpeed = "" + (int) lastl.getSpeed();
@@ -142,8 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         switch (requestCode) {
             case 1: {
-                if (grant)
-                {
+                if (grant) {
                     initLocation();
                 }
                 break;
@@ -176,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             }
             case "DATA":
-                if (mEcuData.feed(data))
-                {
+                if (mEcuData.feed(data)) {
                     updateDash();
                 }
                 break;
@@ -246,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 tv = findViewById(R.id.gear);
                 tv.setText(mEcuData.mGear);
-                if (mEcuData.mGear == "N" || mEcuData.mGear == "S")
+                if (mEcuData.mGear == "N" || mEcuData.mGear == "P")
                     tv.setBackgroundColor(0xff00cc00);
                 else
                     tv.setBackgroundColor(0x0000cc00);
