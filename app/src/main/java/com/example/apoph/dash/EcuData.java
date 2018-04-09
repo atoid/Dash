@@ -20,6 +20,7 @@ public class EcuData {
     public String mGear;
     public String mEngine;
     public String mMessage;
+    public int mTps;
 
     private int mNeutral = 0;
     private int mRpmBin = 0;
@@ -34,6 +35,7 @@ public class EcuData {
         mBatteryVoltage = "-";
         mGear = "N";
         mEngine = "0";
+        mTps = 0;
     }
 
     private int getShortValue(int at) {
@@ -86,6 +88,7 @@ public class EcuData {
             mBatteryVoltage = "" + ((float) getByteValue(4+12) / 10.f);
             mSpeedBin = getByteValue(4+13);
             mSpeed = "" + mSpeedBin;
+            mTps = getByteValue(4+3);
         }
 
         if (table == TABLE_D1) {

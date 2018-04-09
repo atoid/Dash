@@ -172,7 +172,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="RPM"
-        app:layout_constraintEnd_toEndOf="@+id/rpm"
+        app:layout_constraintEnd_toStartOf="@+id/h_divider"
         app:layout_constraintTop_toTopOf="@+id/v_divider" />
 
     <TextView
@@ -224,5 +224,30 @@
         android:text="GEAR"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/table_r2" />
+
+    <ProgressBar
+        android:id="@+id/tps"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:max="100"
+        android:progress="50"
+        android:progressTint="@color/colorPrimaryDark"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/table_r1"
+        app:layout_constraintEnd_toStartOf="@+id/h_divider"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tps_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TPS"
+        app:layout_constraintBottom_toTopOf="@+id/table_r1"
+        app:layout_constraintEnd_toStartOf="@+id/h_divider" />
 
 </android.support.constraint.ConstraintLayout>

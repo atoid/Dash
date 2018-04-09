@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -252,6 +253,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 tv.setText(mEcuData.mCoolantTemp);
                 tv = findViewById(R.id.battery_v);
                 tv.setText(mEcuData.mBatteryVoltage);
+
+                ProgressBar pb = findViewById(R.id.tps);
+                pb.setProgress(mEcuData.mTps);
             }
         });
     }
