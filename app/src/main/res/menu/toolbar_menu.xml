@@ -12,6 +12,9 @@
         android:enabled="false"
         android:title="Disconnect" />
     <item
+        android:id="@+id/action_gearing"
+        android:title="Gearing" />
+    <item
         android:id="@+id/action_center"
         android:checkable="true"
         android:checked="true"

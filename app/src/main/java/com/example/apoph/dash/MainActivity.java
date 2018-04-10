@@ -1,6 +1,8 @@
 package com.example.apoph.dash;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private BtUart mBtUart;
     private Menu mOptionsMenu;
     private EcuData mEcuData;
-    private ConnectDlg mDlg;
+    private ConnectDlg mConnectDlg;
+    private GearingDlg mGearingDlg;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, "Bluetooth fail", Toast.LENGTH_SHORT).show();
             mBtUart = null;
         }
+
+        mPrefs = getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -285,13 +291,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (mBtUart != null) {
                     DialogInterface.OnClickListener cb = new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            mBtUart.connect(mDlg.getDeviceAddr(which));
+                            mBtUart.connect(mConnectDlg.getDeviceAddr(which));
                         }
                     };
 
                     if (!mBtUart.connect()) {
-                        mDlg = new ConnectDlg(this, mBtUart.getBleDevices(), cb);
-                        mDlg.show();
+                        mConnectDlg = new ConnectDlg(this, mBtUart.getBleDevices(), cb);
+                        mConnectDlg.show();
                     }
                 }
                 return true;
@@ -307,6 +313,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_gps_speed:
                 item.setChecked(!item.isChecked());
                 mShowGpsSpeed = item.isChecked();
+                return true;
+            case R.id.action_gearing:
+                mGearingDlg = new GearingDlg(this, mPrefs);
+                mGearingDlg.show();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.

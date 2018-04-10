@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 public class ConnectDlg {
-    private final String TAG = "DLG";
+    private final String TAG = "DLGCONN";
     private final int BD_ADDR_LENGTH = 17;
     private AlertDialog mDlg;
     String[] mDevList;
