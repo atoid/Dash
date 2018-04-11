@@ -1,12 +1,15 @@
 package com.example.apoph.dash;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import java.util.Locale;
 
 /**
  * Created by apoph on 25.3.2018.
  */
 
-public class EcuData {
+public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "ECUDATA";
     private static final int MIN_DATA_LENGTH = 1;
     private static final int TABLE_11 = 0x11;
@@ -21,13 +24,17 @@ public class EcuData {
     public String mEngine;
     public String mMessage;
     public int mTps;
+    public float mRatio;
 
     private int mNeutral = 0;
     private int mRpmBin = 0;
     private int mSpeedBin = 0;
     private String msgBuf = "";
+    private float[] mRatios = {0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
+    private SharedPreferences mPrefs;
+    private final float mRatioHysteresis = 0.01f;
 
-    public EcuData() {
+    public EcuData(SharedPreferences prefs) {
         mRpm = "0";
         mSpeed = "0";
         mAirTemp = "-";
@@ -36,6 +43,20 @@ public class EcuData {
         mGear = "N";
         mEngine = "0";
         mTps = 0;
+        mRatio = 0.f;
+        mPrefs = prefs;
+
+        for (int i = 0; i < mRatios.length; i++) {
+            mRatios[i] = prefs.getFloat(String.format("gear%d", i), 0.f);
+        }
+
+        prefs.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        int i = Integer.parseInt(key.substring(key.length()-1));
+        mRatios[i] = prefs.getFloat(key, 0.f);
     }
 
     private int getShortValue(int at) {
@@ -59,10 +80,23 @@ public class EcuData {
         }
         else {
             // Calculate gear from speed / rpm ratio
-            if (mRpmBin > 0) {
-                float ratio = (float) mSpeedBin / (float) mRpmBin;
-                // TODO: find out the ratios...
-                mGear = String.format("%.3f", ratio);
+            if (mRpmBin > 0 && mSpeedBin > 0) {
+                mRatio = (float) mSpeedBin / (float) mRpmBin;
+
+                for (int i = 0; i < mRatios.length; i++)
+                {
+                    float rlo = mRatios[i] - mRatioHysteresis;
+                    float rhi = mRatios[i] + mRatioHysteresis;
+
+                    if (mRatio >= rlo && mRatio <= rhi)
+                    {
+                        mGear = String.format("%d", i+1);
+                        return;
+                    }
+                }
+
+                // Cannot find gear, show the ratio
+                mGear = String.format(Locale.ROOT,"%.3f", mRatio);
             }
         }
     }

@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEcuData = new EcuData();
+        mPrefs = getPreferences(Context.MODE_PRIVATE);
+
+        mEcuData = new EcuData(mPrefs);
         updateDash();
 
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
@@ -80,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, "Bluetooth fail", Toast.LENGTH_SHORT).show();
             mBtUart = null;
         }
-
-        mPrefs = getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -262,6 +262,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 ProgressBar pb = findViewById(R.id.tps);
                 pb.setProgress(mEcuData.mTps);
+
+                if (mGearingDlg != null) {
+                    mGearingDlg.updateRatio(mEcuData.mRatio);
+                }
             }
         });
     }
