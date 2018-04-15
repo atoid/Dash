@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
@@ -120,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (mMap != null && lastl != null) {
                     LatLng nl = new LatLng(lastl.getLatitude(), lastl.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(nl));
-                    mGpsSpeed = "" + (int) lastl.getSpeed();
+                    // Convert to kmh
+                    mGpsSpeed = "" + (int) (3.6f * lastl.getSpeed());
                 }
             }
         };
@@ -214,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     m = mOptionsMenu.findItem(R.id.action_disconnect);
                     m.setEnabled(true);
                     Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
                 else {
                     m = mOptionsMenu.findItem(R.id.action_connect);
@@ -221,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     m = mOptionsMenu.findItem(R.id.action_disconnect);
                     m.setEnabled(false);
                     Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             }
         });

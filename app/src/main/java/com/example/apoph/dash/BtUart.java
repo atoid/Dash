@@ -110,6 +110,10 @@ public class BtUart {
             return false;
         }
 
+        if (!mBluetoothAdapter.isEnabled()) {
+            return false;
+        }
+
         mCtx = ctx;
         mCallback = callback;
         // Start BLE scanning

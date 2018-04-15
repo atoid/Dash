@@ -32,7 +32,8 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
     private String msgBuf = "";
     private float[] mRatios = {0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
     private SharedPreferences mPrefs;
-    private final float mRatioHysteresis = 0.01f;
+    private final float mRatioHysteresis = 0.001f;
+    private final int mNeutralSpeedLimit = 4;
 
     public EcuData(SharedPreferences prefs) {
         mRpm = "0";
@@ -76,15 +77,19 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
             mGear = "P";    // Kickstand (like Park)
         }
         else if (v == 0x01) {
-            mGear = "N";    // Neutral or clutch
+            if (mSpeedBin <= mNeutralSpeedLimit) {
+                mGear = "N";    // Neutral
+            }
+            else {
+                mGear = "-";    // Clutch when shifting
+            }
         }
         else {
             // Calculate gear from speed / rpm ratio
             if (mRpmBin > 0 && mSpeedBin > 0) {
                 mRatio = (float) mSpeedBin / (float) mRpmBin;
 
-                for (int i = 0; i < mRatios.length; i++)
-                {
+                for (int i = 0; i < mRatios.length; i++) {
                     float rlo = mRatios[i] - mRatioHysteresis;
                     float rhi = mRatios[i] + mRatioHysteresis;
 
