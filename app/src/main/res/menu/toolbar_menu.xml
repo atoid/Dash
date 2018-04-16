@@ -24,4 +24,9 @@
         android:checkable="true"
         android:checked="false"
         android:title="GPS speed" />
+    <item
+        android:id="@+id/action_log"
+        android:checkable="true"
+        android:checked="false"
+        android:title="Log" />
 </menu>

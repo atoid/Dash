@@ -34,6 +34,7 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
     private SharedPreferences mPrefs;
     private final float mRatioHysteresis = 0.001f;
     private final int mNeutralSpeedLimit = 4;
+    private MotoLogger mLogger;
 
     public EcuData(SharedPreferences prefs) {
         mRpm = "0";
@@ -117,6 +118,11 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
             return false;
         }
 
+        // Store to log
+        if (mLogger != null) {
+            mLogger.log(msgBuf + "\n");
+        }
+
         int table = getByteValue(3);
 
         if (table == TABLE_11) {
@@ -164,5 +170,12 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
         }
 
         return res;
+    }
+
+    public void setLogger(MotoLogger logger) {
+        if (mLogger != null) {
+            mLogger.stop();
+        }
+        mLogger = logger;
     }
 }

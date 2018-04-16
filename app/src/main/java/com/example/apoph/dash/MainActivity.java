@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ConnectDlg mConnectDlg;
     private GearingDlg mGearingDlg;
     private SharedPreferences mPrefs;
+    private MotoLogger mEcuLogger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMapFragment.getMapAsync(this);
 
         ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
         mBtUart = new BtUart();
@@ -103,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (mBtUart != null) {
             mBtUart.close();
+        }
+
+        if (mEcuLogger != null) {
+            mEcuLogger.stop();
         }
 
         Log.i(TAG, "onDestroy");
@@ -142,18 +147,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
 
-        boolean grant = false;
-        if (grantResults.length > 0) {
-            grant = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+        boolean grantLoc = false;
+        boolean grantFile = false;
+
+        if (grantResults.length >= 2) {
+            grantLoc = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            grantFile = (grantResults[1] == PackageManager.PERMISSION_GRANTED);
         }
 
-        switch (requestCode) {
-            case 1: {
-                if (grant) {
-                    initLocation();
-                }
-                break;
-            }
+        if (grantLoc) {
+            initLocation();
+        }
+
+        if (grantFile) {
+            mEcuLogger = new MotoLogger("ECU");
         }
     }
 
@@ -161,9 +168,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (type) {
             case "CONNECTED":
                 onConnect(true);
+                if (mEcuLogger != null) {
+                    mEcuLogger.start();
+                }
                 break;
             case "DISCONNECTED":
                 onConnect(false);
+                if (mEcuLogger != null) {
+                    mEcuLogger.stop();
+                }
                 break;
             case "SCANSTART":
                 onScan(true);
@@ -325,6 +338,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_gearing:
                 mGearingDlg = new GearingDlg(this, mPrefs);
                 mGearingDlg.show();
+                return true;
+            case R.id.action_log:
+                item.setChecked(!item.isChecked());
+                if (item.isChecked()) {
+                    mEcuData.setLogger(mEcuLogger);
+                }
+                else {
+                    mEcuData.setLogger(null);
+                }
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
