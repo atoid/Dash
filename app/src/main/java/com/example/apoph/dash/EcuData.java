@@ -173,9 +173,6 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
     }
 
     public void setLogger(MotoLogger logger) {
-        if (mLogger != null) {
-            mLogger.stop();
-        }
         mLogger = logger;
     }
 }

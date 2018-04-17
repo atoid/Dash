@@ -168,15 +168,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (type) {
             case "CONNECTED":
                 onConnect(true);
-                if (mEcuLogger != null) {
-                    mEcuLogger.start();
-                }
                 break;
             case "DISCONNECTED":
                 onConnect(false);
-                if (mEcuLogger != null) {
-                    mEcuLogger.stop();
-                }
                 break;
             case "SCANSTART":
                 onScan(true);
@@ -341,18 +335,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.action_log:
                 item.setChecked(!item.isChecked());
-                if (item.isChecked()) {
-                    mEcuData.setLogger(mEcuLogger);
-                }
-                else {
-                    mEcuData.setLogger(null);
+                if (mEcuLogger != null) {
+                    if (item.isChecked()) {
+                        mEcuLogger.start();
+                        mEcuData.setLogger(mEcuLogger);
+                    } else {
+                        mEcuLogger.stop();
+                        mEcuData.setLogger(null);
+                    }
                 }
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 

@@ -38,19 +38,29 @@ public class MotoLogger {
         mFileTag = tag;
     }
 
+    private String getTimestamp(boolean timeOnly) {
+        Calendar c = Calendar.getInstance();
+
+        int y = c.get(Calendar.YEAR);
+        int k = c.get(Calendar.MONTH);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int h = c.get(Calendar.HOUR);
+        int m = c.get(Calendar.MINUTE);
+        int s = c.get(Calendar.SECOND);
+        int ms = c.get(Calendar.MILLISECOND);
+
+        if (timeOnly) {
+            return String.format(Locale.ROOT, "%02d:%02d:%02d.%04d", h, m, s, ms);
+        }
+        else {
+            return String.format(Locale.ROOT, "%d-%02d-%02dT%02d-%02d-%02d", y, k+1, d, h, m, s);
+        }
+    }
+
     public void start() {
         if (mDir != null) {
-            Calendar c = Calendar.getInstance();
-
-            int y = c.get(Calendar.YEAR);
-            int k = c.get(Calendar.MONTH);
-            int d = c.get(Calendar.DAY_OF_MONTH);
-
-            int h = c.get(Calendar.HOUR);
-            int m = c.get(Calendar.MINUTE);
-            int s = c.get(Calendar.SECOND);
-
-            String name = mFileTag + String.format(Locale.ROOT, "-%d-%02d-%02dT%02d-%02d-%02d", y, k+1, d, h, m, s) + ".txt";
+            String ts = getTimestamp(false);
+            String name = mFileTag + "-" + ts + ".txt";
             mFile = new File(mDir, name);
 
             try {
@@ -75,7 +85,8 @@ public class MotoLogger {
     public void log(String txt) {
         if (mOut != null) {
             try {
-                mOut.append(txt);
+                String ts = getTimestamp(true);
+                mOut.append(ts + " " + txt);
             } catch (Exception e) {}
         }
     }
