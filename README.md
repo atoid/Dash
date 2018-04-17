@@ -11,19 +11,19 @@ Default gear ratios are set for stock Honda CB500F. Gear ratios can be set in a 
 start the bike and set on gear 1. When ratio settles, tap 'Gear 1' and the ratio is set for the gear. Go through all gears and 
 tap 'Save' when ready. Now the app should find correct gear from speed/RPM ratio. If no gear is found, ratio is shown instead.
 
-Some bikes might report the excact gear in the table data, maybe that could be an option in the app?
+Some bikes might report the exact gear in the table data, maybe that could be an option in the app?
 
-The app handles Honda specific table numbers 0x17 and 0xD1. The table numbers may vary between Honda models, but the data is
+The app handles Honda specific table numbers 0x11 and 0xD1. The table numbers may vary between Honda models, but the data is
 pretty much the same. For different tables to be reported, some changes are required in DashBle ECU interfacing code.
 
 See the DashBle repository for the ECU interfacing.
 
-## Honda ECU tables 17 and D1
+## Honda ECU tables 11 and D1
 
-Dash EcuData class currently parses tables 0x17 and 0xD1 which contain useful information and those tables are also somewhat
-decoded 'in internet'. Table 17 data at offset 20 could be AFR, this was not previously decoded?
+Dash EcuData class currently parses tables 0x11 and 0xD1 which contain useful information and those tables are also somewhat
+decoded 'in internet'. Table 11 data at offset 20 could be AFR, this was not previously decoded?
 
-### Table 17
+### Table 11
 
 Full message from idling CB500F bike. Offset in decimal, data in hex.
 
