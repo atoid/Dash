@@ -232,7 +232,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:max="100"
+        android:max="120"
         android:progress="50"
         android:progressTint="@color/colorPrimaryDark"
         android:visibility="visible"
