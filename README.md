@@ -21,11 +21,11 @@ See the DashBle repository for the ECU interfacing.
 ## Honda ECU tables 17 and D1
 
 Dash EcuData class currently parses tables 0x17 and 0xD1 which contain useful information and those tables are also somewhat
-decoded 'in internet'. Table 17 Data at offset 20 could be AFR, this was not previously decoded?
+decoded 'in internet'. Table 17 data at offset 20 could be AFR, this was not previously decoded?
 
 ### Table 17
 
-Full message from idling CB500F bike.
+Full message from idling CB500F bike. Offset in decimal, data in hex.
 
 | Offset | Data | Description |
 | -- | -- | --- |
@@ -46,7 +46,7 @@ Full message from idling CB500F bike.
 | 14 | FF | ? |
 | 15 | FF | ? |
 | 16 | 8B | Battery voltage, divide by 10 |
-| 17 | 00 | Speed |
+| 17 | 00 | Speed in km/h |
 | 18 | 04 | Injectors hi byte? |
 | 19 | 35 | Injectors lo byte? |
 | 20 | 98 | AFR, divide by 10, not sure about this but could be? |
@@ -63,7 +63,7 @@ Full message from idling CB500F bike.
 
 ### Table D1
 
-Full message from idling CB500F bike.
+Full message from idling CB500F bike. Offset in decimal, data in hex.
 
 | Offset | Data | Description |
 | -- | -- | --- |
