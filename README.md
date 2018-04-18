@@ -21,11 +21,13 @@ See the DashBle repository for the ECU interfacing.
 ## Honda ECU tables 11 and D1
 
 Dash EcuData class currently parses tables 0x11 and 0xD1 which contain useful information and those tables are also somewhat
-decoded 'in internet'. Table 11 data at offset 20 could be AFR, this was not previously decoded?
+decoded 'in the internet'.
 
 ### Table 11
 
-Full message from idling CB500F bike. Offset in decimal, data in hex.
+Full message from idling CB500F bike. Offset in decimal, data in hex. Values at offsets 21, 22, 23 seem to change a lot in
+the start of ride. After a while they reach stable values like hex 45, 12, 71. Maybe some value shows AFR, fuel level, 
+fuel consumption...? Need to collect more logs to figure them out.
 
 | Offset | Data | Description |
 | -- | -- | --- |
@@ -49,7 +51,7 @@ Full message from idling CB500F bike. Offset in decimal, data in hex.
 | 17 | 00 | Speed in km/h |
 | 18 | 04 | Injectors hi byte? |
 | 19 | 35 | Injectors lo byte? |
-| 20 | 98 | AFR, divide by 10, not sure about this but could be? |
+| 20 | 98 | Scaled AFR? |
 | 21 | 5B | ? |
 | 22 | 17 | ? |
 | 23 | 23 | ? |
@@ -63,7 +65,8 @@ Full message from idling CB500F bike. Offset in decimal, data in hex.
 
 ### Table D1
 
-Full message from idling CB500F bike. Offset in decimal, data in hex.
+Full message from idling CB500F bike. Offset in decimal, data in hex. Engine byte at offset 8 seems to get different values during
+ride. I've seen hex values 01, 13, 09, 05 and during ride value 13 seems to be the most common.
 
 | Offset | Data | Description |
 | -- | -- | --- |
@@ -75,6 +78,6 @@ Full message from idling CB500F bike. Offset in decimal, data in hex.
 |  5 | 00 | ? |
 |  6 | 00 | ? |
 |  7 | 00 | ? |
-|  8 | 01 | Engine on = 1, off = 0|
+|  8 | 01 | Engine on = 1, off = 0, other values too|
 |  9 | 00 | ? |
 | 10 | AF | Checksum |	
