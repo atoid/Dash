@@ -34,6 +34,8 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Locale;
+
 interface OnDashDataCallback {
     void onDashData(String type, byte[] data);
 }
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GearingDlg mGearingDlg;
     private SharedPreferences mPrefs;
     private MotoLogger mEcuLogger;
+    private MotoLogger mGpsLogger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(nl));
                     // Convert to kmh
                     mGpsSpeed = "" + (int) (3.6f * lastl.getSpeed());
+
+                    if (mGpsLogger != null) {
+                        mGpsLogger.log(String.format(Locale.ROOT, "%.6f,%.6f,%.0f,%s\n", lastl.getLatitude(), lastl.getLongitude(), lastl.getAltitude(), mGpsSpeed));
+                    }
                 }
             }
         };
@@ -161,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (grantFile) {
             mEcuLogger = new MotoLogger("ECU");
+            mGpsLogger = new MotoLogger("GPS");
         }
     }
 
@@ -335,12 +343,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.action_log:
                 item.setChecked(!item.isChecked());
-                if (mEcuLogger != null) {
+                if (mEcuLogger != null && mGpsLogger != null) {
                     if (item.isChecked()) {
                         mEcuLogger.start();
+                        mGpsLogger.start();
                         mEcuData.setLogger(mEcuLogger);
                     } else {
                         mEcuLogger.stop();
+                        mGpsLogger.stop();
                         mEcuData.setLogger(null);
                     }
                 }

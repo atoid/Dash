@@ -44,7 +44,7 @@ public class MotoLogger {
         int y = c.get(Calendar.YEAR);
         int k = c.get(Calendar.MONTH);
         int d = c.get(Calendar.DAY_OF_MONTH);
-        int h = c.get(Calendar.HOUR);
+        int h = c.get(Calendar.HOUR_OF_DAY);
         int m = c.get(Calendar.MINUTE);
         int s = c.get(Calendar.SECOND);
         int ms = c.get(Calendar.MILLISECOND);
