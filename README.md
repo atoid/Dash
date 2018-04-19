@@ -52,7 +52,7 @@ fuel consumption...? Need to collect more logs to figure them out.
 | 18 | 04 | Injectors hi byte? |
 | 19 | 35 | Injectors lo byte? |
 | 20 | 98 | Scaled AFR? |
-| 21 | 5B | ? |
+| 21 | 5B | Scaled avg consumption? |
 | 22 | 17 | ? |
 | 23 | 23 | ? |
 | 24 | 1E | Checksum |
@@ -62,6 +62,13 @@ fuel consumption...? Need to collect more logs to figure them out.
 * IAT = Intake Air Temp
 * MAP = Manifold Absolute Pressure
 * AFR = Air Fuel Ratio
+
+My initial guesses for some of the unknown elements:
+
+| Offset | Data | Description |
+| -- | -- | --- |
+| 20 | CA | AFR, divide by 16 |
+| 21 | 2D | Average consumption l/100km, divide by 10 |
 
 ### Table D1
 
