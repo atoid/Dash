@@ -29,6 +29,13 @@ Full message from idling CB500F bike. Offset in decimal, data in hex. Values at 
 the start of ride. After a while they reach stable values like hex 45, 12, 71. Maybe some value shows AFR, fuel level, 
 fuel consumption...? Need to collect more logs to figure them out.
 
+My initial guesses for some of the unknown elements:
+
+| Offset | Data | Description |
+| -- | -- | --- |
+| 20 | CA | AFR, divide by 16 |
+| 21 | 2D | Average consumption l/100km, divide by 10 |
+
 | Offset | Data | Description |
 | -- | -- | --- |
 |  0 | 02 | Sender (ECU) |
@@ -52,7 +59,7 @@ fuel consumption...? Need to collect more logs to figure them out.
 | 18 | 04 | Injectors hi byte? |
 | 19 | 35 | Injectors lo byte? |
 | 20 | 98 | Scaled AFR? |
-| 21 | 5B | ? |
+| 21 | 5B | Scaled avg consumption? |
 | 22 | 17 | ? |
 | 23 | 23 | ? |
 | 24 | 1E | Checksum |
