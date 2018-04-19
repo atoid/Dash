@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mEcuLogger.stop();
         }
 
+        if (mGpsLogger != null) {
+            mGpsLogger.stop();
+        }
+
         Log.i(TAG, "onDestroy");
     }
 
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     m = mOptionsMenu.findItem(R.id.action_disconnect);
                     m.setEnabled(false);
                     Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             }
         });
@@ -348,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mEcuLogger.start();
                         mGpsLogger.start();
                         mEcuData.setLogger(mEcuLogger);
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     } else {
                         mEcuLogger.stop();
                         mGpsLogger.stop();
