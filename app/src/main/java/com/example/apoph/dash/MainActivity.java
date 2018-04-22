@@ -137,7 +137,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mGpsSpeed = "" + (int) (3.6f * lastl.getSpeed());
 
                     if (mGpsLogger != null) {
-                        mGpsLogger.log(String.format(Locale.ROOT, "%.6f,%.6f,%.0f,%s\n", lastl.getLatitude(), lastl.getLongitude(), lastl.getAltitude(), mGpsSpeed));
+                        mGpsLogger.log(String.format(Locale.ROOT, "%.6f,%.6f,%.0f,%s,%.0f\n",
+                                lastl.getLatitude(),
+                                lastl.getLongitude(),
+                                lastl.getAltitude(),
+                                mGpsSpeed,
+                                lastl.getBearing()));
                     }
                 }
             }
