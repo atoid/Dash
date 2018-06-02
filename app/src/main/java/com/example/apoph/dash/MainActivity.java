@@ -376,12 +376,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.action_big_gear:
                 item.setChecked(!item.isChecked());
-                if (item.isChecked()) {
-                    setContentView(R.layout.activity_main_gear);
-                }
-                else {
-                    setContentView(R.layout.activity_main);
-                }
+                //if (item.isChecked()) {
+                //    setContentView(R.layout.activity_main_gear);
+                //}
+                //else {
+                //    setContentView(R.layout.activity_main);
+                //}
                 return true;
             case R.id.action_log:
                 item.setChecked(!item.isChecked());
