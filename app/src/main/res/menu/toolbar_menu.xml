@@ -15,6 +15,12 @@
         android:id="@+id/action_gearing"
         android:title="Gear ratios" />
     <item
+        android:id="@+id/action_big_gear"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Gear view"
+        android:visible="false" />
+    <item
         android:id="@+id/action_center"
         android:checkable="true"
         android:checked="true"

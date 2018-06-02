@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 //import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -105,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
 
+        CameraPosition cp = mMap.getCameraPosition();
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putFloat("zoom", cp.zoom);
+        editor.commit();
+
         if (mBtUart != null) {
             mBtUart.close();
         }
@@ -132,7 +139,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (mMap != null && lastl != null) {
                     LatLng nl = new LatLng(lastl.getLatitude(), lastl.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(nl));
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLng(nl));
+                    CameraPosition.Builder cb = new CameraPosition.Builder(mMap.getCameraPosition());
+                    cb.target(nl);
+                    cb.tilt(0);
+                    cb.bearing(lastl.getBearing());
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cb.build()));
+
                     // Convert to kmh
                     mGpsSpeed = "" + (int) (3.6f * lastl.getSpeed());
 
@@ -277,10 +290,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 tv = findViewById(R.id.gear);
                 tv.setText(mEcuData.mGear);
-                if (mEcuData.mGear == "N" || mEcuData.mGear == "P")
+                if (mEcuData.mGear == "N" || mEcuData.mGear == "P") {
                     tv.setBackgroundColor(0xff00cc00);
-                else
+                }
+                else {
                     tv.setBackgroundColor(0x0000cc00);
+                }
+                tv = findViewById(R.id.gear_big);
+                if (mEcuData.mSpeedBin > 4 && "123456-".contains(mEcuData.mGear)) {
+                    tv.setText(mEcuData.mGear);
+                    tv.setVisibility(View.VISIBLE);
+                }
+                else {
+                    tv.setVisibility(View.INVISIBLE);
+                }
                 tv = findViewById(R.id.air_t);
                 tv.setText(mEcuData.mAirTemp);
                 tv = findViewById(R.id.coolant_t);
@@ -304,7 +327,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng kni = new LatLng(64.232, 27.782);
         //mMap.addMarker(new MarkerOptions().position(kni).title("Koti"));
         mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(13.0f));
+        float zoom = mPrefs.getFloat("zoom", 13.0f);
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(zoom));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(kni));
     }
 
@@ -349,6 +373,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_gearing:
                 mGearingDlg = new GearingDlg(this, mPrefs);
                 mGearingDlg.show();
+                return true;
+            case R.id.action_big_gear:
+                item.setChecked(!item.isChecked());
+                if (item.isChecked()) {
+                    setContentView(R.layout.activity_main_gear);
+                }
+                else {
+                    setContentView(R.layout.activity_main);
+                }
                 return true;
             case R.id.action_log:
                 item.setChecked(!item.isChecked());

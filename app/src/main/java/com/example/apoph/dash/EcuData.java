@@ -25,10 +25,10 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
     public String mMessage;
     public int mTps;
     public float mRatio;
+    public int mSpeedBin = 0;
 
     private int mNeutral = 0;
     private int mRpmBin = 0;
-    private int mSpeedBin = 0;
     private String msgBuf = "";
     private float[] mRatios = {0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
     private SharedPreferences mPrefs;
@@ -57,8 +57,10 @@ public class EcuData implements SharedPreferences.OnSharedPreferenceChangeListen
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        int i = Integer.parseInt(key.substring(key.length()-1));
-        mRatios[i] = prefs.getFloat(key, 0.f);
+        if (key.contains("gear")) {
+            int i = Integer.parseInt(key.substring(key.length() - 1));
+            mRatios[i] = prefs.getFloat(key, 0.f);
+        }
     }
 
     private int getShortValue(int at) {
